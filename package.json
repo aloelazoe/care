@@ -1,0 +1,17 @@
+{
+  "name": "care",
+  "version": "0.1.0",
+  "description": "cozy self-care reminders ✨💜🌈",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build-mac": "electron-packager . --platform=darwin --arch=x64 --out=build/ --overwrite --icon=icons/circle-icons-heart.icns && echo \"built for mac\""
+  },
+  "author": "Elkie Nova (@aloelazoe)",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "electron": "^6.0.4",
+    "electron-packager": "^14.0.5"
+  }
+}
