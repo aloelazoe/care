@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>care</title>
+  <link href="style.css" rel="stylesheet">
+  <script>
+    const {
+      remote,
+      ipcRenderer
+    } = require('electron');
+    document.addEventListener('DOMContentLoaded', () => {
+      const careInterval = remote.getGlobal('CARE_INTERVAL');
+      const lastTimeout = remote.getGlobal('lastTimeout');
+      document.getElementById('careIntervalEl').innerHTML = parseMsToMinutes(lastTimeout ? careInterval - (Date.now() - lastTimeout) : careInterval);
+      document.getElementById('closeButton').onclick = () => {
+        ipcRenderer.send('closeWindowOfCare');
+      };
+    });
+    function parseMsToMinutes(msStr) {
+      return Math.round(Number(msStr) / 1000 / 60);
+    }
+  </script>
+</head>
+<body>
+  <p>hi there beautiful human [*ﾟ ‿ ﾟ*]</p>
+  <p>see you in <span id="careIntervalEl"></span> minutes</p>
+  <button id="closeButton">1. see ya soon</button>
+</body>
+</html>

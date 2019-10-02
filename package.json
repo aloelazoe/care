@@ -9,7 +9,9 @@
   },
   "author": "Elkie Nova (@aloelazoe)",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "fs-extra": "^8.1.0"
+  },
   "devDependencies": {
     "electron": "^6.0.4",
     "electron-packager": "^14.0.5"
