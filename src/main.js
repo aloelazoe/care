@@ -31,30 +31,34 @@ function init() {
 
   global.lastTimeout = null;
 
-  // takes a path to hmtl file to load (relative to the app folder path)
-  function showWindowOfCare(htmlPath) {
+  // takes a path to js preload file (relative to the app folder path)
+  function showWindowOfCare(preloadPath) {
     app.focus();
-    if (win) return; // show it if it's hidden for some reason
+    if (win) return; // just show the existing window it if it's hidden for some reason
     const { screen } = require('electron');
     const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
-    const winWidth = Math.floor(screenWidth * 0.5);
-    const winHeight = Math.floor(screenHeight * 0.3);
+    // mb still use winWidth and widthHeight which is relative to the screen. but that would make more sense if font size and all elements are adjustabel too
+    // const winWidth = Math.floor(screenWidth * 0.5);
+    // const winHeight = Math.floor(screenHeight * 0.3);
+    const winWidth = 720;
+    const winHeight = 720;
     log(`screenWidth: ${screenWidth}\nscreenHeight: ${screenHeight}\nwinWidth: ${winWidth}\nwinHeight: ${winHeight}`);
     win = new BrowserWindow({
       webPreferences: {
-        nodeIntegration: true
+        nodeIntegration: true,
+        preload: path.join(app.getAppPath(), preloadPath),
       },
       show: true,
-      alwaysOnTop: true,
-      frame: false,
-      resizable: false,
+      alwaysOnTop: app.isPackaged,
+      frame: !app.isPackaged,
+      resizable: !app.isPackaged,
       movable: true,
       width: winWidth,
       height: winHeight,
       x: Math.floor(screenWidth * 0.5 - (winWidth * 0.5)),
-      y: Math.floor(screenHeight * 0.3 - (winHeight * 0.5)),
+      y: Math.floor(screenHeight * 0.5 - (winHeight * 0.5)),
     });
-    win.loadFile(path.join(app.getAppPath(), htmlPath));
+    win.loadFile(path.join(app.getAppPath(), 'src/index.html'));
 
     win.on('close', () => {
       win = null;
@@ -64,7 +68,7 @@ function init() {
         global.lastTimeout = Date.now();
         careWindowTimeout = setTimeout(() => {
           careWindowTimeout = null;
-          showWindowOfCare('render/reminder.html');
+          showWindowOfCare('src/screen-reminder.js');
         }, global.CARE_INTERVAL);
         log('set new timeout');
       } else {
@@ -74,9 +78,9 @@ function init() {
   }
 
   function launch() {
-    shell.openItem(prefsPath);
-    shell.openItem(logPath);
-    showWindowOfCare('render/setup.html');
+    // shell.openItem(prefsPath);
+    // shell.openItem(logPath);
+    showWindowOfCare('src/screen-setup.js');
     // todo: show setup window that i'm going to show on the fresh startup or when a new day starts
   }
 

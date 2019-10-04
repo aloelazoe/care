@@ -1,0 +1,48 @@
+@charset "utf-8";
+@font-face {
+  font-family: Iosevka-SS06;
+  src: url(../fonts/iosevka-ss06-medium.ttf);
+}
+
+/*todo: make sure that the lines with emoji are not taller than lines without emoji*/
+html {
+  color: white;
+  /*background-color: #cc747a;*/
+  background-color: #e3d3b8;
+  font-family: "Iosevka-SS06";
+}
+
+.outerContainer {
+  margin: 2.5% 0;
+}
+
+.innerContainer {
+  margin: 0 auto;
+  padding: 0%;
+  color: white;
+}
+
+#textContainer {
+  margin: 0 8vw;
+  padding: 1em 2vw;
+  background-color: #4d59a1;
+}
+
+.response {
+  margin: 0.5em 8vw;
+  padding: 0.5em 2vw;
+  background-color: #dbb08a;
+  color: white;
+}
+
+.keyPressed, .response:hover {
+  background-color: #d19c7c;
+}
+
+.response.checked {
+  background-color: #4d59a1;
+}
+
+.response.checked.keyPressed, .response.checked:hover {
+  background-color: #6e749f;
+}
