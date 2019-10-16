@@ -1,5 +1,6 @@
 const {
     ipcRenderer,
+    remote,
 } = require('electron');
 const {
     renderText,
@@ -17,8 +18,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const m = date.getMinutes();
     if (((h === 2 && m > 30) || h > 2) && h < 10) {
         // TODO: make font size bigger
-        const importantMessage = "please\nthis is very important\ngo to sleep now\ndon't mess up your sleep schedule\nif you mess it up\nit will take days and days of painful insomnia\nuntil you will be able to fix it again\nplease take care of yourself\nyou deserve care and love\nplase take care of your body\ngo to sleep";
-        renderText(importantMessage);
+        let i = 1
+        const importantMessageLines = [
+            "please",
+            "this is very important",
+            "go to sleep now",
+            "don't mess up your sleep schedule",
+            "if you mess it up",
+            "it will take days and days of painful insomnia",
+            "until you will be able to fix it again",
+            "please take care of yourself",
+            "you deserve care and love",
+            "plase take care of your body",
+            "go to sleep"
+        ];
+        document.getElementById('textContainer').innerText += importantMessageLines[0]
+        document.addEventListener('keyup', function(e) {
+            if (i >= importantMessageLines.length) return;
+            document.getElementById('textContainer').innerText += '\n' + importantMessageLines[i]
+            if (++i >= importantMessageLines.length) {
+                // what do we do when all lines are printed
+                window.setTimeout(() => {
+                    addResponse(
+                        "\nhiya! i took a moment to think about how i'm feeling\nand how things are going 🌱✨🌈",
+                        (respEl, text, inputCode) => {
+                            ipcRenderer.send('closeWindowOfCare');
+                        },
+                        ['Enter', 'enter']
+                    );
+                }, remote.getGlobal('MEDITATION_TIME'))
+                return;
+            }
+        });
         return;
     }
 
