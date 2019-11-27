@@ -12,11 +12,31 @@ const {
 
 document.addEventListener('DOMContentLoaded', () => {
     //  VERY IMPORTANT: PROTECT SLEEP
-    // if time is between 2h30m and 10h am
     const date = new Date();
     const h = date.getHours();
     const m = date.getMinutes();
-    if (((h === 2 && m > 30) || h > 2) && h < 10) {
+    // convert time to minutes
+    let curTime = m + h * 60;
+    // SLEEP_TIME should be in a format 'hh:mm-hh:mm'
+    const sleepTime = remote.getGlobal('SLEEP_TIME')
+        .split(/\D/)
+        .map(Number)
+        .reduce((acc, cur, idx) => {
+            // convert time to minutes
+            if (idx % 2 === 0) {
+                acc[idx/2] = cur * 60;
+            } else {
+                acc[(idx-1)/2] = acc[(idx-1)/2] + cur;
+            }
+            return acc;
+        }, []);
+    // adjust for day boundary
+    if (sleepTime[0] > sleepTime[1]) {
+        sleepTime[1] = sleepTime[1] + 24 * 60;
+        if (curTime < sleepTime[0]) curTime += 24 * 60;
+    }
+    
+    if (curTime > sleepTime[0] && curTime < sleepTime[1]) {
         // TODO: make font size bigger
         let i = 1
         const importantMessageLines = [

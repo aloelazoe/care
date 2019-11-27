@@ -6,7 +6,8 @@ const {
   Notification,
   BrowserWindow,
   ipcMain,
-  shell
+  shell,
+  Menu,
 } = require('electron');
 
 function init() {
@@ -22,7 +23,8 @@ function init() {
   if (!fse.pathExistsSync(prefsPath)) {
     fse.outputJsonSync(prefsPath, {
       CARE_INTERVAL: 1800000, // todo: set in minutes instead. note: 30 minutes = 1 800 000 ms
-      MEDITATION_TIME: 3000
+      MEDITATION_TIME: 3000,
+      SLEEP_TIME: '00:30-10:00',
     }, { spaces: 2 });
   }
 
@@ -30,6 +32,25 @@ function init() {
   global = Object.assign(global, prefs);
 
   global.lastTimeout = null;
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate([
+    {
+      label: 'Settings',
+      submenu: [
+        {
+          label: 'config file',
+          type: 'normal',
+          click: () => {shell.openItem(prefsPath);},
+        },
+        {
+          label: 'log',
+          type: 'normal',
+          click: () => {shell.openItem(logPath);},
+        },
+      ],
+    },
+    { role: 'editMenu' },
+    ]));
 
   // takes a path to js preload file (relative to the app folder path)
   function showWindowOfCare(preloadPath) {
